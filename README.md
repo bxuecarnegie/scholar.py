@@ -4,8 +4,8 @@ Disclaimer
 --------
 
 This is a fork of ckreibich/scholar.py and used for personal modifications. Currently includes:
-* Added a '--page' argument that would retrieve results on specified pages
-
+* Added a '--page' argument that would retrieve results on specified pages.
+* Added a '-u/--url' argument that would allow users to provide mirror sites.
 
 ==========
 scholar.py is a Python module that implements a querier and parser for Google Scholar's output. Its classes can be used independently, but it can also be invoked as a command-line tool.

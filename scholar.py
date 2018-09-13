@@ -241,18 +241,22 @@ class SoupKitchen(object):
 class ScholarConf(object):
     """Helper class for global settings."""
 
-    VERSION = '2.10'
-    LOG_LEVEL = 1
-    MAX_PAGE_RESULTS = 10  # Current default for per-page results
-    SCHOLAR_SITE = 'http://scholar.google.com'
+    def __init__(self):
+        self.VERSION = '2.10'
+        self.LOG_LEVEL = 1
+        self.MAX_PAGE_RESULTS = 10  # Current default for per-page results
+        self.SCHOLAR_SITE = 'http://scholar.google.com'
 
-    # USER_AGENT = 'Mozilla/5.0 (X11; U; FreeBSD i386; en-US; rv:1.9.2.9) Gecko/20100913 Firefox/3.6.9'
-    # Let's update at this point (3/14):
-    USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'
+        # USER_AGENT = 'Mozilla/5.0 (X11; U; FreeBSD i386; en-US; rv:1.9.2.9) Gecko/20100913 Firefox/3.6.9'
+        # Let's update at this point (3/14):
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'
 
-    # If set, we will use this file to read/save cookies to enable
-    # cookie use across sessions.
-    COOKIE_JAR_FILE = None
+        # If set, we will use this file to read/save cookies to enable
+        # cookie use across sessions.
+        self.COOKIE_JAR_FILE = None
+
+    def setScholarSite(self, url):
+        self.SCHOLAR_SITE = url
 
 
 class ScholarUtils(object):
@@ -274,7 +278,7 @@ class ScholarUtils(object):
     def log(level, msg):
         if level not in ScholarUtils.LOG_LEVELS.keys():
             return
-        if ScholarUtils.LOG_LEVELS[level] > ScholarConf.LOG_LEVEL:
+        if ScholarUtils.LOG_LEVELS[level] > ScholarConf().LOG_LEVEL:
             return
         sys.stderr.write('[%5s]  %s' % (level.upper(), msg + '\n'))
         sys.stderr.flush()
@@ -368,10 +372,10 @@ class ScholarArticleParser(object):
     adapting to tweaks made by Google over time follow below.
     """
 
-    def __init__(self, site=None):
+    def __init__(self, site=None, scholarConf=ScholarConf()):
         self.soup = None
         self.article = None
-        self.site = site or ScholarConf.SCHOLAR_SITE
+        self.site = site or scholarConf.SCHOLAR_SITE
         self.year_re = re.compile(r'\b(?:20|19)\d{2}\b')
 
     def handle_article(self, art):
@@ -400,6 +404,8 @@ class ScholarArticleParser(object):
 
         # Now parse out listed articles:
         for div in self.soup.findAll(ScholarArticleParser._tag_results_checker):
+            if div is None:
+                continue
             self._parse_article(div)
             self._clean_article()
             if self.article['title']:
@@ -570,13 +576,16 @@ class ScholarArticleParser120726(ScholarArticleParser):
 
     def _parse_article(self, div):
         self.article = ScholarArticle()
-
         for tag in div:
-            if not hasattr(tag, 'name'):
+            if not hasattr(tag, 'name') or len(tag) == 0:
                 continue
             if str(tag).lower().find('.pdf'):
-                if tag.find('div', {'class': 'gs_ttss'}):
-                    self._parse_links(tag.find('div', {'class': 'gs_ttss'}))
+                try:
+                    if tag.find('div', {'class': 'gs_ttss'}):
+                        self._parse_links(tag.find('div', {'class': 'gs_ttss'}))
+                except:
+                    # Error tags when dealing with Mirror Sites
+                    pass
 
             if tag.name == 'div' and self._tag_has_class(tag, 'gs_ri'):
                 # There are (at least) two formats here. In the first
@@ -714,12 +723,12 @@ class ClusterScholarQuery(ScholarQuery):
     This version just pulls up an article cluster whose ID we already
     know about.
     """
-    SCHOLAR_CLUSTER_URL = ScholarConf.SCHOLAR_SITE + '/scholar?' \
-                          + 'cluster=%(cluster)s' \
-                          + '%(num)s'
 
-    def __init__(self, cluster=None):
+    def __init__(self, cluster=None, scholarConf=ScholarConf()):
         ScholarQuery.__init__(self)
+        self.SCHOLAR_CLUSTER_URL = scholarConf.SCHOLAR_SITE + '/scholar?' \
+                                   + 'cluster=%(cluster)s' \
+                                   + '%(num)s'
         self._add_attribute_type('num_results', 'Results', 0)
         self.cluster = None
         self.set_cluster(cluster)
@@ -753,28 +762,31 @@ class SearchScholarQuery(ScholarQuery):
     This version represents the search query parameters the user can
     configure on the Scholar website, in the advanced search options.
     """
-    # BO: Added start in query
-    SCHOLAR_QUERY_URL = ScholarConf.SCHOLAR_SITE + '/scholar?' \
-                        + 'start=%(start)s' \
-                        + '&as_q=%(words)s' \
-                        + '&as_epq=%(phrase)s' \
-                        + '&as_oq=%(words_some)s' \
-                        + '&as_eq=%(words_none)s' \
-                        + '&as_occt=%(scope)s' \
-                        + '&as_sauthors=%(authors)s' \
-                        + '&as_publication=%(pub)s' \
-                        + '&as_ylo=%(ylo)s' \
-                        + '&as_yhi=%(yhi)s' \
-                        + '&as_vis=%(citations)s' \
-                        + '&btnG=&hl=en' \
-                        + '%(num)s' \
-                        + '&as_sdt=%(patents)s%%2C5'
 
-    def __init__(self):
+    # BO: Added start in query
+
+    def __init__(self, scholarConf=ScholarConf()):
         ScholarQuery.__init__(self)
+        #changed as_q to q
+        self.SCHOLAR_QUERY_URL = scholarConf.SCHOLAR_SITE + '/scholar?' \
+                                 + 'start=%(start)s' \
+                                 + '&q=%(words)s' \
+                                 + '&as_epq=%(phrase)s' \
+                                 + '&as_oq=%(words_some)s' \
+                                 + '&as_eq=%(words_none)s' \
+                                 + '&as_occt=%(scope)s' \
+                                 + '&as_sauthors=%(authors)s' \
+                                 + '&as_publication=%(pub)s' \
+                                 + '&as_ylo=%(ylo)s' \
+                                 + '&as_yhi=%(yhi)s' \
+                                 + '&as_vis=%(citations)s' \
+                                 + '&btnG=&hl=en' \
+                                 + '%(num)s' \
+                                 + '&as_sdt=%(patents)s%%2C5'
         self._add_attribute_type('num_results', 'Results', 0)
         # BO: Added page in object
         self.page = None
+        self.MAX_PAGE_RESULTS = scholarConf.MAX_PAGE_RESULTS
         self.words = None  # The default search behavior
         self.words_some = None  # At least one of those words
         self.words_none = None  # None of these words
@@ -789,7 +801,7 @@ class SearchScholarQuery(ScholarQuery):
     # BO: Added set 'start' for page in object
     def set_page(self, page):
         """Sets the page of the results."""
-        start = (int(page) - 1) * ScholarConf.MAX_PAGE_RESULTS
+        start = (int(page) - 1) * self.MAX_PAGE_RESULTS
         self.page = start
 
     def set_words(self, words):
@@ -895,10 +907,11 @@ class ScholarSettings(object):
     CITFORM_ENDNOTE = 3
     CITFORM_BIBTEX = 4
 
-    def __init__(self):
+    def __init__(self, scholarConf=ScholarConf()):
         self.citform = 0  # Citation format, default none
         self.per_page_results = None
         self._is_configured = False
+        self.MAX_PAGE_RESULTS = scholarConf.MAX_PAGE_RESULTS
 
     def set_citation_format(self, citform):
         citform = ScholarUtils.ensure_int(citform)
@@ -912,7 +925,7 @@ class ScholarSettings(object):
         self.per_page_results = ScholarUtils.ensure_int(
             per_page_results, 'page results must be integer')
         self.per_page_results = min(
-            self.per_page_results, ScholarConf.MAX_PAGE_RESULTS)
+            self.per_page_results, self.MAX_PAGE_RESULTS)
         self._is_configured = True
 
     def is_configured(self):
@@ -927,24 +940,6 @@ class ScholarQuerier(object):
     ScholarArticle instances.
     """
 
-    # Default URLs for visiting and submitting Settings pane, as of 3/14
-    GET_SETTINGS_URL = ScholarConf.SCHOLAR_SITE + '/scholar_settings?' \
-                       + 'sciifh=1&hl=en&as_sdt=0,5'
-
-    SET_SETTINGS_URL = ScholarConf.SCHOLAR_SITE + '/scholar_setprefs?' \
-                       + 'q=' \
-                       + '&scisig=%(scisig)s' \
-                       + '&inststart=0' \
-                       + '&as_sdt=1,5' \
-                       + '&as_sdtp=' \
-                       + '&num=%(num)s' \
-                       + '&scis=%(scis)s' \
-                       + '%(scisf)s' \
-                       + '&hl=en&lang=all&instq=&inst=569367360547434339&save='
-
-    # Older URLs:
-    # ScholarConf.SCHOLAR_SITE + '/scholar?q=%s&hl=en&btnG=Search&as_sdt=2001&as_sdtp=on
-
     class Parser(ScholarArticleParser120726):
         def __init__(self, querier):
             ScholarArticleParser120726.__init__(self)
@@ -957,16 +952,16 @@ class ScholarQuerier(object):
         def handle_article(self, art):
             self.querier.add_article(art)
 
-    def __init__(self):
+    def __init__(self, scholarConf=ScholarConf()):
         self.articles = []
         self.query = None
         self.cjar = MozillaCookieJar()
 
         # If we have a cookie file, load it:
-        if ScholarConf.COOKIE_JAR_FILE and \
-                os.path.exists(ScholarConf.COOKIE_JAR_FILE):
+        if scholarConf.COOKIE_JAR_FILE and \
+                os.path.exists(scholarConf.COOKIE_JAR_FILE):
             try:
-                self.cjar.load(ScholarConf.COOKIE_JAR_FILE,
+                self.cjar.load(scholarConf.COOKIE_JAR_FILE,
                                ignore_discard=True)
                 ScholarUtils.log('info', 'loaded cookies file')
             except Exception as msg:
@@ -975,6 +970,23 @@ class ScholarQuerier(object):
 
         self.opener = build_opener(HTTPCookieProcessor(self.cjar))
         self.settings = None  # Last settings object, if any
+        # Default URLs for visiting and submitting Settings pane, as of 3/14
+        self.GET_SETTINGS_URL = scholarConf.SCHOLAR_SITE + '/scholar_settings?' \
+                           + 'sciifh=1&hl=en&as_sdt=0,5'
+
+        self.SET_SETTINGS_URL = scholarConf.SCHOLAR_SITE + '/scholar_setprefs?' \
+                           + 'q=' \
+                           + '&scisig=%(scisig)s' \
+                           + '&inststart=0' \
+                           + '&as_sdt=1,5' \
+                           + '&as_sdtp=' \
+                           + '&num=%(num)s' \
+                           + '&scis=%(scis)s' \
+                           + '%(scisf)s' \
+                           + '&hl=en&lang=all&instq=&inst=569367360547434339&save='
+
+        # Older URLs:
+        # scholarConf.SCHOLAR_SITE + '/scholar?q=%s&hl=en&btnG=Search&as_sdt=2001&as_sdtp=on
 
     def apply_settings(self, settings):
         """
@@ -1041,7 +1053,6 @@ class ScholarQuerier(object):
                                        err_msg='results retrieval failed')
         if html is None:
             return
-
         self.parse(html)
 
     def get_citation_data(self, article):
@@ -1080,15 +1091,15 @@ class ScholarQuerier(object):
         """Clears any existing articles stored from previous queries."""
         self.articles = []
 
-    def save_cookies(self):
+    def save_cookies(self, scholarConf=ScholarConf()):
         """
         This stores the latest cookies we're using to disk, for reuse in a
         later session.
         """
-        if ScholarConf.COOKIE_JAR_FILE is None:
+        if scholarConf.COOKIE_JAR_FILE is None:
             return False
         try:
-            self.cjar.save(ScholarConf.COOKIE_JAR_FILE,
+            self.cjar.save(scholarConf.COOKIE_JAR_FILE,
                            ignore_discard=True)
             ScholarUtils.log('info', 'saved cookies file')
             return True
@@ -1096,7 +1107,7 @@ class ScholarQuerier(object):
             ScholarUtils.log('warn', 'could not save cookies file: %s' % msg)
             return False
 
-    def _get_http_response(self, url, log_msg=None, err_msg=None):
+    def _get_http_response(self, url, log_msg=None, err_msg=None, scholarConf=ScholarConf()):
         """
         Helper method, sends HTTP request and returns response payload.
         """
@@ -1107,7 +1118,7 @@ class ScholarQuerier(object):
         try:
             ScholarUtils.log('info', 'requesting %s' % unquote(url))
 
-            req = Request(url=url, headers={'User-Agent': ScholarConf.USER_AGENT})
+            req = Request(url=url, headers={'User-Agent': scholarConf.USER_AGENT})
             hdl = self.opener.open(req)
             html = hdl.read()
 
@@ -1171,8 +1182,8 @@ A command-line interface to Google Scholar.
 
 Examples:
 
-# Retrieve "bigd gsa" articles on page 2:
-scholar.py --all "bigd gsa" --page 2"
+# Retrieve "bigd gsa" articles on page 2 using mirror site "https://f.glgoo.top":
+scholar.py --all "bigd gsa" --page 2 -u "https://f.glgoo.top""
 
 # Retrieve one article written by Einstein on quantum theory:
 scholar.py -c 1 --author "albert einstein" --phrase "quantum theory"
@@ -1240,9 +1251,14 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
                      help='Enable verbose logging to stderr. Repeated options increase detail of debug output.')
     group.add_option('-v', '--version', action='store_true', default=False,
                      help='Show version information')
+    # BO: Added argument to change scholar url
+    group.add_option('-u', '--url', metavar='URL', default=None, dest='url',
+                     help='Set Scholar Site query base url')
     parser.add_option_group(group)
 
     options, _ = parser.parse_args()
+    scholarConf = ScholarConf()
+
     # Show help if we have neither keyword search nor author name
     if len(sys.argv) == 1:
         parser.print_help()
@@ -1250,15 +1266,18 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
 
     if options.debug > 0:
         options.debug = min(options.debug, ScholarUtils.LOG_LEVELS['debug'])
-        ScholarConf.LOG_LEVEL = options.debug
-        ScholarUtils.log('info', 'using log level %d' % ScholarConf.LOG_LEVEL)
+        scholarConf.LOG_LEVEL = options.debug
+        ScholarUtils.log('info', 'using log level %d' % scholarConf.LOG_LEVEL)
 
     if options.version:
-        print('This is scholar.py %s.' % ScholarConf.VERSION)
+        print('This is scholar.py %s.' % scholarConf.VERSION)
         return 0
 
     if options.cookie_file:
-        ScholarConf.COOKIE_JAR_FILE = options.cookie_file
+        scholarConf.COOKIE_JAR_FILE = options.cookie_file
+
+    if options.url is not None:
+        scholarConf.SCHOLAR_SITE = options.url
 
     # Sanity-check the options: if they include a cluster ID query, it
     # makes no sense to have search arguments:
@@ -1269,8 +1288,8 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
             print('Cluster ID queries do not allow additional search arguments.')
             return 1
 
-    querier = ScholarQuerier()
-    settings = ScholarSettings()
+    querier = ScholarQuerier(scholarConf=scholarConf)
+    settings = ScholarSettings(scholarConf=scholarConf)
 
     if options.citation == 'bt':
         settings.set_citation_format(ScholarSettings.CITFORM_BIBTEX)
@@ -1287,9 +1306,9 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
     querier.apply_settings(settings)
 
     if options.cluster_id:
-        query = ClusterScholarQuery(cluster=options.cluster_id)
+        query = ClusterScholarQuery(cluster=options.cluster_id, scholarConf=scholarConf)
     else:
-        query = SearchScholarQuery()
+        query = SearchScholarQuery(scholarConf=scholarConf)
         if options.author:
             query.set_author(options.author)
         if options.page:
@@ -1316,7 +1335,7 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
             query.set_include_citations(False)
 
     if options.count is not None:
-        options.count = min(options.count, ScholarConf.MAX_PAGE_RESULTS)
+        options.count = min(options.count, scholarConf.MAX_PAGE_RESULTS)
         query.set_num_page_results(options.count)
 
     querier.send_query(query)

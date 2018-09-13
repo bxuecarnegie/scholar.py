@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d6d48e2-8b2b-4c77-814f-106ead538f66" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scholar.py" beforeDir="false" afterPath="$PROJECT_DIR$/scholar.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -11,37 +12,64 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/scholar_py$scholar.coverage" NAME="scholar Coverage Results" MODIFIED="1536831458830" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/scholar_py$scholar.coverage" NAME="scholar Coverage Results" MODIFIED="1536843105130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="445131776">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="149" />
+          <entry key="py" value="1146" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="149" />
+          <entry key="Python" value="1146" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="1" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scholar.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+            <state relative-caret-position="124">
+              <caret line="1186" lean-forward="true" selection-start-line="1186" selection-end-line="1186" />
               <folding>
-                <element signature="e#6843#6858#0" expanded="true" />
+                <element signature="e#9867#10499#0" />
+                <element signature="e#10536#13267#0" />
+                <element signature="e#23999#26572#0" />
+                <element signature="e#26620#27840#0" />
+                <element signature="e#27887#33199#0" />
+                <element signature="e#33237#34406#0" />
+                <element signature="e#35734#37380#0" />
+                <element signature="e#39263#40034#0" />
+                <element signature="e#40251#40312#0" />
+                <element signature="e#40352#40443#0" />
+                <element signature="e#40481#41003#0" />
+                <element signature="e#41080#42143#0" />
+                <element signature="e#42182#43157#0" />
+                <element signature="e#43205#43362#0" />
+                <element signature="e#43399#43491#0" />
+                <marker date="1536843006083" expanded="true" signature="9341:9346" ph="..." />
               </folding>
             </state>
           </provider>
@@ -54,6 +82,32 @@
       <find>page</find>
       <find>print</find>
       <find>example</find>
+      <find>-u</find>
+      <find>url</find>
+      <find>version</find>
+      <find>Query URL</find>
+      <find>SCHOLAR_QUERY_URL</find>
+      <find>scholarconf</find>
+      <find>COOKIE_JAR_FILE</find>
+      <find>Title</find>
+      <find>ScholarQuery</find>
+      <find>ScholarArticle</find>
+      <find>scholarConf</find>
+      <find>parser</find>
+      <find>LOG_LEVEL</find>
+      <find>ScholarConf</find>
+      <find>txt</find>
+      <find>SearchScholarQuery</find>
+      <find>ClusterScholarQuery</find>
+      <find>ScholarQuerier</find>
+      <find>ScholarSettings</find>
+      <find>ScholarUtils</find>
+      <find>all</find>
+      <find>as_q</find>
+      <find>q=</find>
+      <find>ScholarArticleParser</find>
+      <find>pdf</find>
+      <find>_parse_article</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -142,7 +196,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scholar.py" />
-      <option name="PARAMETERS" value="--all &quot;bigd gsa&quot; --page 2" />
+      <option name="PARAMETERS" value="--all &quot;bigd gsa&quot; --page 2 -u &quot;https://x.zhoupen.cn&quot;" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -173,15 +227,9 @@
     <frame x="61" y="23" width="1379" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24981302" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25729245" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3299363" />
@@ -189,11 +237,17 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="SciView" />
-      <window_info anchor="right" id="Database" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,12 +257,34 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2018.2/python_stubs/2037583357/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="5207" column="8" selection-start-line="5207" selection-start-column="8" selection-end-line="5207" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scholar.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+        <state relative-caret-position="124">
+          <caret line="1186" lean-forward="true" selection-start-line="1186" selection-end-line="1186" />
           <folding>
-            <element signature="e#6843#6858#0" expanded="true" />
+            <element signature="e#9867#10499#0" />
+            <element signature="e#10536#13267#0" />
+            <element signature="e#23999#26572#0" />
+            <element signature="e#26620#27840#0" />
+            <element signature="e#27887#33199#0" />
+            <element signature="e#33237#34406#0" />
+            <element signature="e#35734#37380#0" />
+            <element signature="e#39263#40034#0" />
+            <element signature="e#40251#40312#0" />
+            <element signature="e#40352#40443#0" />
+            <element signature="e#40481#41003#0" />
+            <element signature="e#41080#42143#0" />
+            <element signature="e#42182#43157#0" />
+            <element signature="e#43205#43362#0" />
+            <element signature="e#43399#43491#0" />
+            <marker date="1536843006083" expanded="true" signature="9341:9346" ph="..." />
           </folding>
         </state>
       </provider>
